@@ -128,7 +128,9 @@ jobs:
             command: |
               cd frontend
               npm install
-               npm audit fix --audit-level=critical # Do not use the --force option along with the command below in your local
+               npm audit fix --audit-level=critical --force
+               npm audit --audit-level=critical
+
         - save_cache:
             paths: [frontend/node_modules]
             key: scan-frontend
@@ -144,7 +146,9 @@ jobs:
             command: |
               cd backend
               npm install
+              npm audit fix --audit-level=critical --force 
               npm audit --audit-level=critical
+
         - save_cache:
             paths: [frontend/node_modules]
             key: scan-frontend
