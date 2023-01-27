@@ -159,7 +159,7 @@ jobs:
             event: fail
             template: basic_fail_1
   
-Infrastructure deployment
+ Infrastructure deployment
   deploy-infrastructure:
       docker:
         - image: amazon/aws-cli
