@@ -117,25 +117,8 @@ jobs:
         - save_cache:
             paths: [backend/node_modules]
             key: test-backend
-            
-test-backend:
-      docker:
-        - image: circleci/node:13.8.0
-      steps:
-        - checkout
-        - restore_cache:
-            keys: [test-backend]
-        - run:
-            name: backend test
-            command: |
-              cd backend
-              npm install
-              npm run test
-        - save_cache:
-            paths: [backend/node_modules]
-            key: test-backend
   
-scan-frontend:
+  scan-frontend:
       docker:
         - image: circleci/node:13.8.0
       steps:
@@ -151,7 +134,8 @@ scan-frontend:
         - save_cache:
             paths: [frontend/node_modules]
             key: scan-frontend
-scan-backend:
+            
+  scan-backend:
       docker:
         - image: circleci/node:13.8.0
       steps:
@@ -170,7 +154,9 @@ scan-backend:
         - slack/notify:
             channel: $SLACK_DEFAULT_CHANNEL
             event: fail
-            template: basic_fail_1
+            template: basic_fail_1 
+            
+
 
 #   deploy-infrastructure:
 #     docker:
