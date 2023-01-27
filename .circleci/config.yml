@@ -147,7 +147,7 @@ jobs:
             name: back-end scan
             command: |
               cd backend
-              npm instal
+              npm install
               npm audit fix --audit-level=critical # Do not use the --force option along with the command below in your local 
               
 
