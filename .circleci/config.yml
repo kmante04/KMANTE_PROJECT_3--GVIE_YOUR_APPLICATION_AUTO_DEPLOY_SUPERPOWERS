@@ -211,7 +211,7 @@ jobs:
       - add_ssh_keys:
           fingerprints:
 
-            - "c"
+            - "87:a6:d6:0c:84:5a:27:50:d9:29:bd:09:5a:02:21:c3"
 
       - run:
           name: "Install ansible"
