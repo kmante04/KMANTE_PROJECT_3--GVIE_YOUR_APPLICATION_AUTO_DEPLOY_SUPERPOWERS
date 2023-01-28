@@ -251,7 +251,7 @@ jobs:
           command: |
             cd backend
             rm -rf node_modules
-            rm package-lock.json yarn.lock
+            rm package-lock.json 
             npm cache clean --force
             npm install webpack --save
             npm run migrations > migrations_dump.txt
