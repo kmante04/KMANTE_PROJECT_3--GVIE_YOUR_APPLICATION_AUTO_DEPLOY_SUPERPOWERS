@@ -250,9 +250,10 @@ jobs:
           name: Run migrations
           command: |
             cd backend
-            npm cache clean --force
             rm -rf node_modules
-            npm install
+            rm package-lock.json yarn.lock
+            npm cache clean --force
+            npm install webpack --save
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
       - run: 
