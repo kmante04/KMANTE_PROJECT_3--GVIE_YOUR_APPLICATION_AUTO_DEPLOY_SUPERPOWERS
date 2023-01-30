@@ -230,7 +230,7 @@ jobs:
       - destroy-environment
 
 
-  run-migrations:
+run-migrations:
     docker:
       - image: circleci/node:13.8.0
     steps:
@@ -250,7 +250,7 @@ jobs:
           name: Run migrations
           command: |
             cd backend
-            npm install 
+            npm install
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
       - run: 
@@ -258,7 +258,7 @@ jobs:
           command: |
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
-              curl --insecure https://kvdb.io/WC58mixhsLCCe2mvoVAk2C/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+              curl --insecure https://kvdb.io/Y7Tx1uUb6z96Jg8jA6oWZ6/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
       - destroy-environment
       - revert-migrations
