@@ -381,12 +381,13 @@ jobs:
                     pip3 --version
                     sudo python3 -m pip install ansible
                     sudo apt install rsync -y
-                    # cd backend
-                    # npm install
+                    cd backend
+                    npm install
             - run:
                 name: package backend
                 command: |
                     cd backend
+                    
                     npm run build
                     tar -czf artifact.tar.gz dist/* package*
                     cd ..
