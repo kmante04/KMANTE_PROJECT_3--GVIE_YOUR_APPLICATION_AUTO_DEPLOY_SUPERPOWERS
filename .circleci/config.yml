@@ -363,9 +363,9 @@ jobs:
             - image: cimg/python:3.10
         steps:
             - checkout
-            - install_awscli
-            - install_ansible
-            - install_nodejs
+            # - install_awscli
+            # - install_ansible
+            # - install_nodejs
             - add_ssh_keys:
                        fingerprints: ["c2:d8:cf:80:20:01:e5:3d:b9:33:b6:e9:4a:f5:92:fe"]
             - attach_workspace:
@@ -375,6 +375,9 @@ jobs:
             - run:
                 name: Install dependencies
                 command: |
+                    pip3 install awscli
+                    pip3 install ansible
+                    pip3 install nodejs
                     cd backend
                     npm install
             - run:
