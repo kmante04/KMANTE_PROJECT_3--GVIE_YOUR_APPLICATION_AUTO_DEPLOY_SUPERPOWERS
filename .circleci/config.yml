@@ -305,8 +305,8 @@ jobs:
             - destroy-environment:
                   workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
             # Here's where you will add some code to rollback on failure
-            - destroy-environment:
-                  workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+            # - destroy-environment:
+            #       workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
     # deploy-backend:
     #     docker:
@@ -363,20 +363,17 @@ jobs:
             - image: python:3.7-alpine3.16
         steps:
             - checkout
-            # - install_awscli
-            # - install_ansible
-            # - install_nodejs
             - add_ssh_keys:
-                       fingerprints: ["c2:d8:cf:80:20:01:e5:3d:b9:33:b6:e9:4a:f5:92:fe"]
+                fingerprints: ["c2:d8:cf:80:20:01:e5:3d:b9:33:b6:e9:4a:f5:92:fe"]
             
             - run:
                 name: Install dependencies
                 command: |
-                    apk add --update --no-cache tar gzip nodejs npm aws-cli ansible
-            - attach_workspace:
-                       at: ~/
+                  apk add --update --no-cache tar gzip nodejs npm aws-cli ansible  
             - restore_cache:
                        keys: [backend-build]
+            - attach_workspace:
+                       at: ~/           
             - run:
                 name: Deploy backend
                 command: |
@@ -392,6 +389,8 @@ jobs:
                     ansible-playbook -i inventory.txt deploy-backend.yml
             - destroy-environment:
                  workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+            # - revert-migrations:
+            #      workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}     
 
     smoke-test:
         docker:
