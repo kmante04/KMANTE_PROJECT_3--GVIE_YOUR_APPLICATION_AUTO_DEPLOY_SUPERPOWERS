@@ -308,59 +308,21 @@ jobs:
             # - destroy-environment:
             #       workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
-    # deploy-backend:
-    #     docker:
-    #         # Docker image here that supports Ansible
-    #         - image: python:3.7-alpine3.11
-    #           environment:
-    #               NODE_ENV: "local"
-    #               VERSION: "1"
-    #               ENVIRONMENT: "production"
-    #               TYPEORM_CONNECTION: $TYPEORM_CONNECTION
-    #               TYPEORM_HOST: $TYPEORM_HOST
-    #               TYPEORM_USERNAME: $TYPEORM_USERNAME
-    #               TYPEORM_PASSWORD: $TYPEORM_PASSWORD
-    #               TYPEORM_DATABASE: $TYPEORM_DATABASE
-    #               TYPEORM_PORT: $TYPEORM_PORT
-    #               TYPEORM_ENTITIES: $TYPEORM_ENTITIES
-    #     steps:
-    #         # Checkout code from git
-    #         - checkout
-    #         # Add ssh keys with fingerprint
-    #         - add_ssh_keys:
-    #               fingerprints:
-    #                   ["c2:d8:cf:80:20:01:e5:3d:b9:33:b6:e9:4a:f5:92:fe"]
-    #         # attach workspace
-    #         - attach_workspace:
-    #               at: ~/
-    #         - restore_cache:
-    #               keys: [backend-build]
-    #         - run:
-    #               name: Install dependencies
-    #               command: |
-    #                   apk add --update --no-cache tar gzip nodejs npm tree ansible
-    #                   pip3 install awscli
-    #         - run:
-    #               name: Deploy backend
-    #               command: |
-    #                   export TYPEORM_MIGRATIONS_DIR=./migrations
-    #                   export TYPEORM_ENTITIES=./modules/domain/**/*.entity{.ts,.js}
-    #                   export TYPEORM_MIGRATIONS=./migrations/*.ts
-
-    #                   cd backend
-    #                   npm install --legacy-peer-deps
-    #                   npm run build
-    #                   cd ..
-    #                   tar -C backend -czvf artifact.tar.gz .
-    #                   mkdir -p ~/project/.circleci/ansible/roles/deploy/files/
-    #                   mv artifact.tar.gz .circleci/ansible/roles/deploy/files/artifact.tar.gz
-    #                   cd .circleci/ansible
-    #                   echo "Contents of the inventory.txt file is ------$(cat inventory.txt)"
-    #                   ansible-playbook -i inventory.txt deploy-backend.yml
-            # Here's where you will add some code to rollback on failure
+    
     deploy-backend:
         docker:
             - image: python:3.7-alpine3.16
+              environment:
+                  NODE_ENV: "local"
+                  VERSION: "1"
+                  ENVIRONMENT: "production"
+                  TYPEORM_CONNECTION: $TYPEORM_CONNECTION
+                  TYPEORM_HOST: $TYPEORM_HOST
+                  TYPEORM_USERNAME: $TYPEORM_USERNAME
+                  TYPEORM_PASSWORD: $TYPEORM_PASSWORD
+                  TYPEORM_DATABASE: $TYPEORM_DATABASE
+                  TYPEORM_PORT: $TYPEORM_PORT
+                  TYPEORM_ENTITIES: $TYPEORM_ENTITIES
         steps:
             - checkout
             - add_ssh_keys:
@@ -377,6 +339,17 @@ jobs:
             - run:
                 name: Deploy backend
                 command: |
+                    echo ENVIRONMENT=production > "backend/.env"
+                    echo TYPEORM_CONNECTION=postgres >> "backend/.env"
+                    echo TYPEORM_ENTITIES=./src/modules/domain/**/*.entity.ts >> "backend/.env"
+                    echo TYPEORM_MIGRATIONS=./src/migrations/*.ts >> "backend/.env"
+                    echo TYPEORM_MIGRATIONS_DIR=./src/migrations >> "backend/.env"
+                      # echo NODE_ENV=production >> "backend/.env"
+                    echo TYPEORM_HOST=$TYPEORM_HOST >> "backend/.env"
+                    echo TYPEORM_PORT=$TYPEORM_PORT >> "backend/.env"
+                    echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> "backend/.env"
+                    echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> "backend/.env"
+                    echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> "backend/.env"
                     cd backend
                     npm install
                     npm run build
