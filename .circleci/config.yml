@@ -378,7 +378,7 @@ jobs:
             - restore_cache:
                        keys: [backend-build]
             - run:
-                name: package backend
+                name: Deploy backend
                 command: |
                     cd backend
                     npm install
@@ -386,17 +386,10 @@ jobs:
                     cd ..
                     tar -C backend -czvf artifact.tar.gz .
                     mkdir -p ~/project/.circleci/ansible/roles/deploy/files/
-                     mv artifact.tar.gz .circleci/ansible/roles/deploy/files/artifact.tar.gz
-            - run:
-                name: Deploy backend
-                command: |
-                    #  export TYPEORM_MIGRATIONS_DIR=./migrations
-                    #  export TYPEORM_ENTITIES=./modules/domain/**/*.entity{.ts,.js}
-                    #  export TYPEORM_MIGRATIONS=./migrations/*.ts
-                     cd .circleci/ansible
-                     echo "Displaying content of the inventory.txt file ------"
-                     cat inventory.txt
-                     ansible-playbook -i inventory.txt deploy-backend.yml
+                    mv artifact.tar.gz .circleci/ansible/roles/deploy/files/artifact.tar.gz
+                    cd .circleci/ansible
+                    echo "Displaying content of the inventory.txt file ------$(cat inventory.txt)"
+                    ansible-playbook -i inventory.txt deploy-backend.yml
             - destroy-environment:
                  workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
 
