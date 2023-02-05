@@ -375,11 +375,14 @@ jobs:
             - run:
                 name: Install dependencies
                 command: |
-                    pip install awscli
-                    pip install ansible
-                    pip install nodejs
-                    cd backend
-                    npm install
+                    sudo apt-get update
+                    sudo apt-get install awscli
+                    sudo apt install python3-pip
+                    pip3 --version
+                    sudo python3 -m pip install ansible
+                    sudo apt install rsync -y
+                    # cd backend
+                    # npm install
             - run:
                 name: package backend
                 command: |
