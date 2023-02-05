@@ -231,9 +231,9 @@ jobs:
     run-migrations:
         docker:
             - image: cimg/node:16.10
-              steps:
-                 - checkout
-                 - install_awscli
+        steps:
+            - checkout
+            - install_awscli
 
             - restore_cache:
                  keys: [backend-deps]
