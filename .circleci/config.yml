@@ -359,9 +359,9 @@ jobs:
     #                   ansible-playbook -i inventory.txt deploy-backend.yml
             # Here's where you will add some code to rollback on failure
     deploy-backend:
-         docker:
+        docker:
             - image: cimg/base:stable
-          steps:
+        steps:
             - checkout
             - install_awscli
             - install_ansible
