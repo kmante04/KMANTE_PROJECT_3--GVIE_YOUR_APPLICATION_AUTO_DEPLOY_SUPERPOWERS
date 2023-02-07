@@ -362,10 +362,11 @@ jobs:
                 name: Install dependencies
                 command: |
                   apk add --update --no-cache tar gzip nodejs npm aws-cli ansible  
-            - restore_cache:
-                       keys: [backend-build]
+            
             - attach_workspace:
                        at: ~/           
+            - restore_cache:
+                       keys: [backend-build]
             - run:
                 name: Deploy backend
                 command: |
@@ -398,7 +399,7 @@ jobs:
     smoke-test:
         docker:
             # Lightweight Docker image
-            - image: python:3.7-alpine3.11
+            - image: python:3.7-alpine3.16
               environment:
                   NODE_ENV: "local"
                   VERSION: "1"
@@ -422,7 +423,7 @@ jobs:
                       pip install awscli
             - run:
                   name: Waiting for the server to start running
-                  command: sleep 8m
+                  command: sleep 5m
             - run:
                   name: Backend smoke test.
                   command: |
