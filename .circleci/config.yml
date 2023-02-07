@@ -422,7 +422,7 @@ jobs:
                       pip install awscli
             - run:
                   name: Waiting for the server to start running
-                  command: sleep 2m
+                  command: sleep 8m
             - run:
                   name: Backend smoke test.
                   command: |
@@ -434,9 +434,9 @@ jobs:
                       echo $API_URL
                       if curl --connect-timeout 5 "${API_URL}/api/status" | grep "ok"
                       then
-                      exit 0
+                      return 0
                       else
-                      exit 1
+                      return 1
                       fi
                       
             - run:
