@@ -242,21 +242,33 @@ jobs:
 
     run-migrations:
         docker:
-            - image: cimg/node:19.5.0
+            # - image: cimg/node:19.5.0
+            - image: sleavely/node-awscli:12.x
+              environment:
+                  NODE_ENV: "local"
+                  VERSION: "1"
+                  ENVIRONMENT: "production"
+                  TYPEORM_CONNECTION: $TYPEORM_CONNECTION
+                  TYPEORM_HOST: $TYPEORM_HOST
+                  TYPEORM_USERNAME: $TYPEORM_USERNAME
+                  TYPEORM_PASSWORD: $TYPEORM_PASSWORD
+                  TYPEORM_DATABASE: $TYPEORM_DATABASE
+                  TYPEORM_PORT: $TYPEORM_PORT
+                  TYPEORM_ENTITIES: $TYPEORM_ENTITIES
         steps:
             - checkout
             # - install_awscli
-            - run: 
-               name: Install curl
-               command: |
-                   sudo apt-get install curl -y
-            - run: 
-                 name: Install awscli
-                 command: |
-                     sudo apt-get update && sudo apt-get install -yy less
-                     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-                     unzip awscliv2.zip
-                     sudo ./aws/install
+            # - run: 
+            #    name: Install curl
+            #    command: |
+            #        sudo apt-get install curl -y
+            # - run: 
+            #      name: Install awscli
+            #      command: |
+            #          sudo apt-get update && sudo apt-get install -yy less
+            #          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            #          unzip awscliv2.zip
+            #          sudo ./aws/install
 
             # - restore_cache:
             #      keys: [backend-build]
