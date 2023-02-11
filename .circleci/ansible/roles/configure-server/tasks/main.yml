@@ -1,5 +1,5 @@
 ---
-- name: "Install Node.js 13"
+- name: "Install Node.js 13.8.0"
   shell: |
     # Install Node.js LTS version as our base Node.js version
     curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -

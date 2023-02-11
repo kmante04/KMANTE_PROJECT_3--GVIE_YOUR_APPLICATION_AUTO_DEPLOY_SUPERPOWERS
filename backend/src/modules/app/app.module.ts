@@ -21,7 +21,6 @@ import { EmployeeModule } from '../domain/employees/employee.module';
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      autoLoadEntities: true,
       useFactory: (config: ConfigService) => config.TypeOrmDatabase,
     }),
     OrdersModule,
