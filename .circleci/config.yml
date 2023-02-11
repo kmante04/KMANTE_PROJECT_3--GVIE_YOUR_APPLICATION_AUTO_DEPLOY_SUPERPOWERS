@@ -262,10 +262,7 @@ jobs:
             #    name: Install curl
             #    command: |
             #        sudo apt-get install curl -y
-        commands:
-          install_nodejs:
-          description: Install Node.js 13.8.0
-          steps:
+        
             - run:
                  name: Install Node.js 13.8.0
                  command: |
