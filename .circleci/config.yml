@@ -423,7 +423,7 @@ jobs:
                       pip install awscli
             - run:
                   name: Waiting for the server to start running
-                  command: sleep 5m
+                  command: sleep 2m
             - run:
                   name: Backend smoke test.
                   command: |
