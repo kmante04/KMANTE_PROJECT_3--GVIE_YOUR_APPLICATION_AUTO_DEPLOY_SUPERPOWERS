@@ -243,7 +243,7 @@ jobs:
     run-migrations:
         docker:
             # - image: cimg/node:19.5.0
-            - image: sleavely/node-awscli:12.x
+            - image: cimg/node:16.10
               environment:
                   NODE_ENV: "local"
                   VERSION: "1"
@@ -258,17 +258,17 @@ jobs:
         steps:
             - checkout
             # - install_awscli
-            # - run: 
-            #    name: Install curl
-            #    command: |
-            #        sudo apt-get install curl -y
-            # - run: 
-            #      name: Install awscli
-            #      command: |
-            #          sudo apt-get update && sudo apt-get install -yy less
-            #          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            #          unzip awscliv2.zip
-            #          sudo ./aws/install
+            - run: 
+               name: Install curl
+               command: |
+                   sudo apt-get install curl -y
+            - run: 
+                 name: Install awscli
+                 command: |
+                     sudo apt-get update && sudo apt-get install -yy less
+                     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+                     unzip awscliv2.zip
+                     sudo ./aws/install
 
             # - restore_cache:
             #      keys: [backend-build]
@@ -291,9 +291,9 @@ jobs:
                      echo "No migrations are pending"
                      fi
 
-            - save_cache:
-                 paths: [backend/node_modules]
-                 key: backend-build
+            # - save_cache:
+            #      paths: [backend/node_modules]
+            #      key: backend-build
             # Here's where you will add some code to rollback on failure
             - destroy-environment:
                  workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
