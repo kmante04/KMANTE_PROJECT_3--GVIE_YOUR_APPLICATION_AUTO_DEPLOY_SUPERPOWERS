@@ -244,24 +244,24 @@ jobs:
         docker:
             # - image: cimg/node:19.5.0
             - image: circleci/node:13.8.0
-              environment:
-                  NODE_ENV: "local"
-                  VERSION: "1"
-                  ENVIRONMENT: "production"
-                  TYPEORM_CONNECTION: $TYPEORM_CONNECTION
-                  TYPEORM_HOST: $TYPEORM_HOST
-                  TYPEORM_USERNAME: $TYPEORM_USERNAME
-                  TYPEORM_PASSWORD: $TYPEORM_PASSWORD
-                  TYPEORM_DATABASE: $TYPEORM_DATABASE
-                  TYPEORM_PORT: $TYPEORM_PORT
-                  TYPEORM_ENTITIES: $TYPEORM_ENTITIES
+            #   environment:
+            #       NODE_ENV: "local"
+            #       VERSION: "1"
+            #       ENVIRONMENT: "production"
+            #       TYPEORM_CONNECTION: $TYPEORM_CONNECTION
+            #       TYPEORM_HOST: $TYPEORM_HOST
+            #       TYPEORM_USERNAME: $TYPEORM_USERNAME
+            #       TYPEORM_PASSWORD: $TYPEORM_PASSWORD
+            #       TYPEORM_DATABASE: $TYPEORM_DATABASE
+            #       TYPEORM_PORT: $TYPEORM_PORT
+            #       TYPEORM_ENTITIES: $TYPEORM_ENTITIES
         steps:
             - checkout
             # - install_awscli
-            - run: 
-               name: Install curl
-               command: |
-                   sudo apt-get install curl -y
+            # - run: 
+            #    name: Install curl
+            #    command: |
+            #        sudo apt-get install curl -y
             - run: 
                  name: Install awscli
                  command: |
