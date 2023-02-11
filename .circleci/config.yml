@@ -243,7 +243,7 @@ jobs:
     run-migrations:
         docker:
             # - image: cimg/node:19.5.0
-            - image: cimg/node:16.10
+            - image: circleci/node:13.8.0
               environment:
                   NODE_ENV: "local"
                   VERSION: "1"
