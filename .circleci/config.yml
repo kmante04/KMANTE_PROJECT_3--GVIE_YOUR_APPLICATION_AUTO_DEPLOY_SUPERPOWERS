@@ -315,8 +315,7 @@ jobs:
         steps:
             # Checkout code from git
             - checkout
-            - install_awscli
-            - install_nodejs
+            
             - restore_cache:
                   keys: [frontend-build]
             - run:
@@ -324,6 +323,8 @@ jobs:
                   command: |
                       cd frontend
                       npm install
+                      pip install_awscli
+                      pip install_nodejs
             # - run: 
             #      name: Install awscli
             #      command: |
