@@ -311,17 +311,19 @@ jobs:
     deploy-frontend:
         docker:
             # Docker image here that supports AWS CLI
-            - image: python:3.7-alpine3.16
+            - image: cimg/python:3.10
         steps:
             # Checkout code from git
             - checkout
+            - install_awscli
+            - install_nodejs
             - restore_cache:
                   keys: [frontend-build]
             - run:
                   name: Install dependencies
                   command: |
                       cd frontend
-                      sudo apk add --update --no-cache tar gzip nodejs npm aws-cli ansible
+                      npm install
             # - run: 
             #      name: Install awscli
             #      command: |
