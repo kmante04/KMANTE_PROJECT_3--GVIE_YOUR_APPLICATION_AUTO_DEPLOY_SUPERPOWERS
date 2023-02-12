@@ -321,7 +321,7 @@ jobs:
                   name: Install dependencies
                   command: |
                       cd frontend
-                      npm install
+                      apk add --update --no-cache tar gzip nodejs npm 
             - run: 
                  name: Install awscli
                  command: |
