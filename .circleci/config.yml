@@ -311,7 +311,7 @@ jobs:
     deploy-frontend:
         docker:
             # Docker image here that supports AWS CLI
-            - image: cimg/python:3.10
+            - image: sleavely/node-awscli:14.x
         steps:
             # Checkout code from git
             - checkout
@@ -323,8 +323,7 @@ jobs:
                   command: |
                       cd frontend
                       npm install
-                      pip install_awscli
-                      pip install_nodejs
+                      
             # - run: 
             #      name: Install awscli
             #      command: |
