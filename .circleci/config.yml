@@ -321,14 +321,14 @@ jobs:
                   name: Install dependencies
                   command: |
                       cd frontend
-                      apk add --update --no-cache tar gzip nodejs npm 
-            - run: 
-                 name: Install awscli
-                 command: |
-                     sudo apt-get update && sudo apt-get install -yy less
-                     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-                     unzip awscliv2.zip
-                     sudo ./aws/install
+                      sudo apk add --update --no-cache tar gzip nodejs npm aws-cli ansible
+            # - run: 
+            #      name: Install awscli
+            #      command: |
+            #          sudo apt-get update && sudo apt-get install -yy less
+            #          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            #          unzip awscliv2.zip
+            #          sudo ./aws/install
             - run:
                   name: Get backend url
                   command: |
