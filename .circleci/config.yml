@@ -243,7 +243,8 @@ jobs:
     run-migrations:
         docker:
             # - image: cimg/node:19.5.0
-            - image: cimg/python:3.10
+            # - image: cimg/python:3.10
+            - image: python:3.7-alpine3.16
             #   environment:
             #       NODE_ENV: "local"
             #       VERSION: "1"
