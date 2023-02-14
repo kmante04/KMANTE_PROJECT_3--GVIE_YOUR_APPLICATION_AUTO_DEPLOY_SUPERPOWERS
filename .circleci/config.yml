@@ -457,7 +457,7 @@ jobs:
                        return 0
                       else
                        echo "Test failed"
-                    #    return 1
+                       return 1
                       fi
                       
             - run:
