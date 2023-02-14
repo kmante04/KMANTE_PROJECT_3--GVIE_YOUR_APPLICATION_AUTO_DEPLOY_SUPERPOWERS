@@ -217,6 +217,8 @@ jobs:
                       apk add curl
                       apk add --upgrade bash
                       apk add --update ansible
+                      apk add --update gzip
+                      apk add --update tar
                       apk add openssh-client
                       pip3 install awscli
             - run:
