@@ -270,7 +270,7 @@ jobs:
                      then
                      curl -k https://kvdb.io/Mhni7eNHoqfJG86zabZJby/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
                     #  curl --inseure https://kvdb.io/Mhni7eNHoqfJG86zabZJby/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
-                     echo "Successfully migrated"
+                    #  echo "Successfully migrated"
                      else
                      echo "No migrations"
                      fi
