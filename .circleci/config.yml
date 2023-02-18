@@ -31,7 +31,7 @@ commands:
                   when: on_fail
                   command: |
                       # Curl command here to see if there was a successful migration associated with the workflow id, store result in SUCCESS variable
-                      SUCCESS=$(curl --insecure  https://kvdb.io/SnDVMu4MRVTbjsRouNSHBY/migration_<< parameters.workflow_id >>)
+                      SUCCESS=$(curl --insecure  https://kvdb.io/Mhni7eNHoqfJG86zabZJby/migration_<< parameters.workflow_id >>)
                       # Logic for reverting the database state
                       if (( $SUCCESS == 1 ));
                       then
@@ -278,17 +278,17 @@ jobs:
             #        # Use n version manager to use Node.js v13.8.0
             #        sudo npm install --global n
             #        sudo n 13.8.0
-            - run: 
-                 name: Install awscli
-                 command: |
-                     curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-                     unzip awscliv2.zip
-                     sudo ./aws/install
+            # - run: 
+            #      name: Install awscli
+            #      command: |
+            #          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+            #          unzip awscliv2.zip
+            #          sudo ./aws/install
         
-            - restore_cache:
-                 keys: [backend-build]
-            - attach_workspace:
-                at: ~/
+            # - restore_cache:
+            #      keys: [backend-build]
+            # - attach_workspace:
+            #     at: ~/
             - run:
                  name: Run migrations
                  command: |
@@ -301,7 +301,8 @@ jobs:
                  command: |
                      if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
                      then
-                     curl --insecure https://kvdb.io/Mhni7eNHoqfJG86zabZJby/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+                    #  curl --insecure https://kvdb.io/Mhni7eNHoqfJG86zabZJby/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+                     curl -k https://kvdb.io/Mhni7eNHoqfJG86zabZJby/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
                      else
                      echo "No migrations are pending"
                      fi
@@ -311,7 +312,9 @@ jobs:
             #      key: backend-build
             # Here's where you will add some code to rollback on failure
             - destroy-environment:
-                 workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+                 workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+            - revert-migrations:
+                 workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"     
 
     deploy-frontend:
         docker:
@@ -341,11 +344,11 @@ jobs:
                   command: |
                       export BACKEND_PUBLIC_IP=$(aws ec2 describe-instances \
                       --query 'Reservations[*].Instances[*].PublicIpAddress' \
-                      --filters "Name=tag:aws:cloudformation:stack-name,Values=udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+                      --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
                       --output text)
                       export API_URL="http://${BACKEND_IP}:3030"
                       echo "API_URL = ${API_URL}"
-                      echo "API_URL=http://${BACKEND_PUBLIC_IP}:3030" >> frontend/.env
+                      echo API_URL="http://${BACKEND_PUBLIC_IP}:3030" >> frontend/.env
                       cat frontend/.env
             - run:
                   name: Deploy frontend objects
@@ -353,12 +356,13 @@ jobs:
                       cd frontend
                       npm i
                       npm run build
-                      ls -l
                       tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
                       aws s3 cp ./dist "s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7}" --recursive
             # Here's where you will add some code to rollback on failure
             - destroy-environment:
                   workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
+            - revert-migrations:
+                  workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}      
            
 
     
@@ -381,18 +385,20 @@ jobs:
             - add_ssh_keys:
                 fingerprints: ["c2:d8:cf:80:20:01:e5:3d:b9:33:b6:e9:4a:f5:92:fe"]
             
-            - run:
-                name: Install dependencies
-                command: |
-                  apk add --update --no-cache tar gzip nodejs npm aws-cli ansible  
-                     
-            - restore_cache:
-                       keys: [backend-build]
             - attach_workspace:
                   at: ~/
             - run:
+                name: Install dependencies
+                command: |
+                  apk add --update --no-cache tar gzip nodejs npm aws-cli ansible curl  
+                     
+            # - restore_cache:
+            #            keys: [backend-build]
+            
+            - run:
                 name: Deploy backend
                 command: |
+                    pwd
                     cd backend
                     touch .env
                     echo ENVIRONMENT=production > ".env"
@@ -406,9 +412,15 @@ jobs:
                     echo TYPEORM_USERNAME=$TYPEORM_USERNAME >> ".env"
                     echo TYPEORM_PASSWORD=$TYPEORM_PASSWORD >> ".env"
                     echo TYPEORM_DATABASE=$TYPEORM_DATABASE >> ".env"
+                    
+                    
+                    pwd
+                    ls -al
                     npm install
                     npm run build
                     cd ..
+                    pwd
+                    ls -al
                     tar -C backend -czvf artifact.tar.gz .
                     mkdir -p ~/project/.circleci/ansible/roles/deploy/files/
                     mv artifact.tar.gz .circleci/ansible/roles/deploy/files/artifact.tar.gz
@@ -416,9 +428,9 @@ jobs:
                     echo "Displaying content of the inventory.txt file ------$(cat inventory.txt)"
                     ansible-playbook -i inventory.txt deploy-backend.yml -vvv
             - destroy-environment:
-                 workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}
-            # - revert-migrations:
-            #      workflow_id: ${CIRCLE_WORKFLOW_ID:0:7}     
+                 workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"
+            - revert-migrations:
+                 workflow_id: "${CIRCLE_WORKFLOW_ID:0:7}"     
 
     smoke-test:
         docker:
@@ -447,23 +459,41 @@ jobs:
                       apk add --update nodejs
                       apk add --update npm
                       pip3 install awscli
+            # - run:
+            #       name: Waiting for the server to start running
+            #       command: sleep 30s
             - run:
-                  name: Waiting for the server to start running
-                  command: sleep 30s
+                  name: Get backend url
+                  command: |
+                      # your code here
+                      export BACKEND_IP=$(aws ec2 describe-instances \
+                      --filters "Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7}" \
+                      --query "Reservations[*].Instances[*].PublicDnsName" \
+                      --output text)
+                      echo ${BACKEND_IP}
+                      export BACKEND=$(echo $BACKEND_IP | grep -o '[^ ]*$')
+            
+                      echo $BACKEND
+                      export API_URL="http://${BACKEND}:3030"
+                      echo "API_URL=${API_URL}
             - run:
                   name: Backend smoke test.
                   command: |
-                      export BACKEND_PUBLIC_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7} --output text)
-                      export API_URL=http://${BACKEND_PUBLIC_IP}:3030
-                      echo "${API_URL}"
-                      if curl "${API_URL}/api/status" | grep "ok"
-                      then
-                       echo "Success test"
-                       return 0
-                      else
-                       echo "Test failed"
-                       return 1
-                      fi
+                      if [[ 'ok' =~ $(curl -s --connect-timeout 5 http://${BACKEND_IP}:3030/api/status | grep -o ok) ]];then return 0 else return 1;fi
+            # - run:
+            #       name: Backend smoke test.
+            #       command: |
+            #           export BACKEND_PUBLIC_IP=$(aws ec2 describe-instances --query 'Reservations[*].Instances[*].PublicIpAddress' --filters Name=tag:Name,Values=backend-${CIRCLE_WORKFLOW_ID:0:7} --output text)
+            #           export API_URL=http://${BACKEND_PUBLIC_IP}:3030
+            #           echo "${API_URL}"
+            #           if curl "${API_URL}/api/status" | grep "ok"
+            #           then
+            #            echo "Success test"
+            #            return 0
+            #           else
+            #            echo "Test failed"
+            #            return 1
+            #           fi
                       
             - run:
                   name: Frontend smoke test.
