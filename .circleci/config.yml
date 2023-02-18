@@ -247,44 +247,11 @@ jobs:
 
     run-migrations:
         docker:
-            # - image: cimg/node:19.5.0
-            # - image: cimg/python:3.10
             - image: circleci/node:13.8.0
-            #   environment:
-            #       NODE_ENV: "local"
-            #       VERSION: "1"
-            #       ENVIRONMENT: "production"
-            #       TYPEORM_CONNECTION: $TYPEORM_CONNECTION
-            #       TYPEORM_HOST: $TYPEORM_HOST
-            #       TYPEORM_USERNAME: $TYPEORM_USERNAME
-            #       TYPEORM_PASSWORD: $TYPEORM_PASSWORD
-            #       TYPEORM_DATABASE: $TYPEORM_DATABASE
-            #       TYPEORM_PORT: $TYPEORM_PORT
-            #       TYPEORM_ENTITIES: $TYPEORM_ENTITIES
+            
         steps:
             - checkout
-            # - install_awscli
-            # - run: 
-            #    name: Install curl
-            #    command: |
-            #        sudo apt-get install curl -y
-        
-            # - run:
-            #      name: Install Node.js 13.8.0
-            #      command: |
-            #        # Install Node.js LTS version as our base Node.js version
-            #        curl -fsSL https://deb.nodesource.com/setup_lts.x | sudo -E bash -
-            #        sudo apt install -y nodejs
-            #        # Use n version manager to use Node.js v13.8.0
-            #        sudo npm install --global n
-            #        sudo n 13.8.0
-            # - run: 
-            #      name: Install awscli
-            #      command: |
-            #          curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
-            #          unzip awscliv2.zip
-            #          sudo ./aws/install
-        
+            
             # - restore_cache:
             #      keys: [backend-build]
             # - attach_workspace:
@@ -301,7 +268,7 @@ jobs:
                  command: |
                      if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
                      then
-                        curl -k https://kvdb.io/Mhni7eNHoqfJG86zabZJby/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+                     curl -k https://kvdb.io/Mhni7eNHoqfJG86zabZJby/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
                     #  curl --inseure https://kvdb.io/Mhni7eNHoqfJG86zabZJby/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
                      echo "Successfully migrated"
                      else
