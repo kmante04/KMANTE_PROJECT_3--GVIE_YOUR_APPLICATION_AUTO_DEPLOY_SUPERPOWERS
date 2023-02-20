@@ -28,14 +28,18 @@ commands:
           name: Revert migrations
           when: on_fail
           command: |
-            SUCCESS=$(curl --insecure  https://kvdb.io/PSi1vyxG1D4xeStET6YSTw/migration_${CIRCLE_WORKFLOW_ID:0:7})
-            if [ "$SUCCESS" -eq 1 ];
-            then
-              cd ~/project/backend
-              npm install
-              npm run build
-              npm run migrations:revert
-            fi
+            if [ -n "$CIRCLE_WORKFLOW_ID" ]; then
+              SUCCESS=$(curl --insecure  https://kvdb.io/PSi1vyxG1D4xeStET6YSTw/migration_${CIRCLE_WORKFLOW_ID:0:7})
+              if [ "$SUCCESS" -eq 1 ];
+              then
+                cd ~/project/backend
+                npm install
+                npm run build
+                npm run migrations:revert
+              fi
+            else
+               echo "CIRCLE_WORKFLOW_ID is not set or is emplty."
+            fi   
 
 ############################################################
 # Job to Build frontend and backend Codes           
