@@ -238,7 +238,7 @@ jobs:
           command: |
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
             then
-                curl -k https://kvdb.io/44PCo16xKHzPGnzUuUbJav/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
+                curl -k https://kvdb.io/8THgLGbcfC9MUpihPqsR1K/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
       # Here's where you will add some code to rollback on failure...
       - destroy-environment:
@@ -464,7 +464,7 @@ jobs:
               --query "StackSummaries[*].StackName" \
               --stack-status-filter CREATE_COMPLETE --no-paginate --output text)) 
               echo Stack names: "${STACKS[@]}"
-              export OldWorkflowID=$(curl --insecure https://kvdb.io/44PCo16xKHzPGnzUuUbJav/old_workflow_id)
+              export OldWorkflowID=$(curl --insecure https://kvdb.io/8THgLGbcfC9MUpihPqsR1K/old_workflow_id)
               echo Old Workflow ID: $OldWorkflowID
               if [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID}" ]]
               then
