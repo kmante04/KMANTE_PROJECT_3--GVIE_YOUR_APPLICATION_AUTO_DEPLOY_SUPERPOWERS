@@ -1,1 +1,1 @@
-CLOUDFRONT: http://d2gvgwjcg4itha.cloudfront.net
+CLOUDFRONT: http://d39edggkylmi8g.cloudfront.net

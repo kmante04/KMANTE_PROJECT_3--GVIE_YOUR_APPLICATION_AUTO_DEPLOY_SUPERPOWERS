@@ -1,2 +1,2 @@
 https://github.com/kmante04/KMANTE_PROJECT_3--GVIE_YOUR_APPLICATION_AUTO_DEPLOY_SUPERPOWERS
-http://udapeople-5caa25d.s3-website-us-east-1.amazonaws.com
+http://udapeople-8da0be1.s3-website-us-east-1.amazonaws.com
